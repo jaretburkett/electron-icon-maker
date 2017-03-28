@@ -61,7 +61,7 @@ function createPNGs(position) {
 }
 
 function createPNG(size, callback) {
-    var fileName = size.toString() + '.png';
+    var fileName = size.toString() + 'x' + size.toString() + '.png';
 
     // make dir if does not exist
     if (!fs.existsSync(output)) {
