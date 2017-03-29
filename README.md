@@ -43,12 +43,12 @@ Input file should be 1024px x 1024px or larger. Make sure it is a 1 to 1 aspect 
         -[mac]
             - icon.icns
         -[png]
-            - 16.png
-            - 24.png
+            - 16x16.png
+            - 24x24.png
             ...
             ...
-            - 512.png
-            - 1024.png
+            - 512x512.png
+            - 1024x1024.png
         -[win]
             -icon.ico
 ```
