@@ -29,7 +29,7 @@
   "homepage": "https://github.com/jaretburkett/electron-icon-maker",
   "dependencies": {
     "args": "^2.3.0",
-    "icon-gen": "^1.0.7",
+    "icon-gen": "1.0.7",
     "jimp": "^0.2.27"
   }
 }
