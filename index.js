@@ -10,7 +10,8 @@ var pngSizes = [16, 24, 32, 48, 64, 128, 256, 512, 1024];
 
 args
     .option('input', 'Input PNG file. Recommended (1024x1024)', './icon.png')
-    .option('output', 'Folder to output new icons folder', './');
+    .option('output', 'Folder to output new icons folder', './')
+    .option('flatten', 'Flatten output structure for electron-builder', false);
 
 const flags = args.parse(process.argv);
 console.log(flags);
@@ -18,9 +19,12 @@ console.log(flags);
 // correct paths
 var input = path.resolve(process.cwd(), flags.input);
 var output = path.resolve(process.cwd(), flags.output);
+var flatten = flags.flatten;
 var o = output;
-var oSub = o.endsWith('/') ? o + 'icons/' : o + '/icons/';
-var PNGoutputDir = oSub + 'png/';
+var oSub = path.join(o, 'icons/');
+var PNGoutputDir = flatten ? oSub : path.join(oSub, 'png');
+var macOutputDir = flatten ? oSub : path.join(oSub, 'mac');
+var winOutputDir = flatten ? oSub : path.join(oSub, 'win');
 
 const iconOptions = {
     type: 'png',
@@ -42,9 +46,9 @@ function createPNGs(position) {
             createPNGs(position + 1);
         } else {
             // done, generate the icons
-            icongen(PNGoutputDir, oSub + 'mac/', {type: 'png', names: {icns:'icon'}, modes:['icns'], report: true} )
+            icongen(PNGoutputDir, macOutputDir, {type: 'png', names: {icns:'icon'}, modes:['icns'], report: true} )
                 .then( ( results ) => {
-                    icongen(PNGoutputDir, oSub + 'win/', {type: 'png', names: {ico:'icon'}, modes:['ico'], report: true} )
+                    icongen(PNGoutputDir, winOutputDir, {type: 'png', names: {ico:'icon'}, modes:['ico'], report: true} )
                         .then( ( results ) => {
                             // console.log('\n ALL DONE');
                             // rename the PNGs to electron format
@@ -65,7 +69,7 @@ function createPNGs(position) {
 function renamePNGs(position){
     var startName = pngSizes[position] + '.png';
     var endName = pngSizes[position] + 'x' + pngSizes[position] + '.png';
-    fs.rename(PNGoutputDir + startName, PNGoutputDir + endName, function (err) {
+    fs.rename(path.join(PNGoutputDir, startName), path.join(PNGoutputDir, endName), function (err) {
         console.log('Renamed '+ startName + ' to '+endName);
         if (err) {
             throw err;
@@ -91,7 +95,7 @@ function createPNG(size, callback) {
         fs.mkdirSync(oSub);
     }
     // make dir if does not exist
-    if (!fs.existsSync(PNGoutputDir)) {
+    if (!flatten && !fs.existsSync(PNGoutputDir)) {
         fs.mkdirSync(PNGoutputDir);
     }
     Jimp.read(input, function (err, image) {
@@ -99,8 +103,8 @@ function createPNG(size, callback) {
             callback(err, null);
         }
         image.resize(size, size)
-            .write(PNGoutputDir + fileName, function (err) {
-                var logger = 'Created ' + PNGoutputDir + fileName;
+            .write(path.join(PNGoutputDir, fileName), function (err) {
+                var logger = 'Created ' + path.join(PNGoutputDir, fileName);
                 callback(err, logger);
             });
     }).catch(function (err) {
