@@ -44,20 +44,20 @@ function createPNGs(position) {
             // done, generate the icons
             icongen(PNGoutputDir, oSub + 'mac/', {type: 'png', names: {icns:'icon'}, modes:['icns'], report: true} )
                 .then( ( results ) => {
-                icongen(PNGoutputDir, oSub + 'win/', {type: 'png',names: {ico:'icon'}, modes:['ico'], report: true} )
-        .then( ( results ) => {
-                // console.log('\n ALL DONE');
-            // rename the PNGs to electron format
-            console.log('Renaming PNGs to Electron Format');
-            renamePNGs(0);
-        } )
-        .catch( ( err ) => {
-                if (err) throw new Error(err);
-        } );
-        } )
-        .catch( ( err ) => {
-                if (err) throw new Error(err);
-        } );
+                    icongen(PNGoutputDir, oSub + 'win/', {type: 'png', names: {ico:'icon'}, modes:['ico'], report: true} )
+                        .then( ( results ) => {
+                            // console.log('\n ALL DONE');
+                            // rename the PNGs to electron format
+                            console.log('Renaming PNGs to Electron Format');
+                            renamePNGs(0);
+                        } )
+                        .catch( ( err ) => {
+                            if (err) throw new Error(err);
+                        } );
+                } )
+                .catch( ( err ) => {
+                    if (err) throw new Error(err);
+                } );
         }
     });
 }
