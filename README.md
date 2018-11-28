@@ -31,6 +31,7 @@ To use
 ```
 --output, -o = [String] Folder to create files
 --input, -i = [String] Path to PNG file
+--silence, -s = Don't log anything beside errors
 ```
 
 #### Recommendations
