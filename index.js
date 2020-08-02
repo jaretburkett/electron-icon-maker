@@ -6,7 +6,7 @@ const path = require('path');
 const fs = require('fs');
 const icongen = require( 'icon-gen' );
 
-var pngSizes = [16, 24, 32, 48, 64, 128, 256, 512, 1024];
+const pngSizes = [16, 24, 32, 48, 64, 128, 256, 512, 1024];
 
 args
     .option('input', 'Input PNG file. Recommended (1024x1024)', './icon.png')
@@ -42,9 +42,30 @@ function createPNGs(position) {
             createPNGs(position + 1);
         } else {
             // done, generate the icons
-            icongen(PNGoutputDir, oSub + 'mac/', {type: 'png', names: {icns:'icon'}, modes:['icns'], report: true} )
-                .then( ( results ) => {
-                icongen(PNGoutputDir, oSub + 'win/', {type: 'png',names: {ico:'icon'}, modes:['ico'], report: true} )
+            const macDir = path.join(oSub, 'mac');
+            // make dir if does not exist
+            if (!fs.existsSync(macDir)) {
+                fs.mkdirSync(macDir);
+            }
+            const winDir = path.join(oSub, 'win');
+            // make dir if does not exist
+            if (!fs.existsSync(winDir)) {
+                fs.mkdirSync(winDir);
+            }
+            icongen(PNGoutputDir, macDir, {
+                report: true,
+                icns: {
+                    name: 'icon',
+                    sizes:  [16, 32, 64, 128, 256, 512, 1024]
+                },
+            } ).then( ( results ) => {
+                icongen(PNGoutputDir, winDir, {
+                    report: true,
+                    ico: {
+                        name: 'icon',
+                        sizes: [16, 24, 32, 48, 64, 128, 256]
+                    },
+                } )
         .then( ( results ) => {
                 // console.log('\n ALL DONE');
             // rename the PNGs to electron format

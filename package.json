@@ -1,6 +1,6 @@
 {
   "name": "electron-icon-maker",
-  "version": "0.0.3",
+  "version": "0.0.5",
   "description": "An icon generator to generate all the icon files needed for electron packaging",
   "bin": {
     "electron-icon-maker": "index.js"
@@ -29,7 +29,7 @@
   "homepage": "https://github.com/jaretburkett/electron-icon-maker",
   "dependencies": {
     "args": "^2.3.0",
-    "icon-gen": "1.0.7",
-    "jimp": "^0.2.27"
+    "icon-gen": "2.0.0",
+    "jimp": "^0.14.0"
   }
 }
