@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const Jimp = require("jimp");
+const sharp = require('sharp');
 const args = require('args');
 const path = require('path');
 const fs = require('fs');
@@ -115,16 +115,13 @@ function createPNG(size, callback) {
     if (!fs.existsSync(PNGoutputDir)) {
         fs.mkdirSync(PNGoutputDir);
     }
-    Jimp.read(input, function (err, image) {
-        if (err) {
-            callback(err, null);
-        }
-        image.resize(size, size)
-            .write(PNGoutputDir + fileName, function (err) {
-                var logger = 'Created ' + PNGoutputDir + fileName;
-                callback(err, logger);
-            });
-    }).catch(function (err) {
-        callback(err, null);
-    });
+    sharp(input)
+        .resize(size, size)
+        .toFile(PNGoutputDir + fileName, function(err) {
+            if (err) {
+                callback(err, null);
+            } else {
+                callback(null, 'Created ' + PNGoutputDir + fileName);
+            }
+        });
 }
