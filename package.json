@@ -30,6 +30,6 @@
   "dependencies": {
     "args": "^2.3.0",
     "icon-gen": "2.0.0",
-    "jimp": "^0.14.0"
+    "sharp": "0.26.3"
   }
 }
