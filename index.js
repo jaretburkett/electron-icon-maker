@@ -10,10 +10,17 @@ const pngSizes = [16, 24, 32, 48, 64, 128, 256, 512, 1024];
 
 args
     .option('input', 'Input PNG file. Recommended (1024x1024)', './icon.png')
-    .option('output', 'Folder to output new icons folder', './');
+    .option('output', 'Folder to output new icons folder', './')
+    .option('debug', 'log all events to the console');
 
 const flags = args.parse(process.argv);
-console.log(flags);
+
+function log(...input) {
+    if (!flags.debug) return;
+    console.log(...input);
+}
+
+log(flags);
 
 // correct paths
 var input = path.resolve(process.cwd(), flags.input);
@@ -24,7 +31,7 @@ var PNGoutputDir = oSub + 'png/';
 
 const iconOptions = {
     type: 'png',
-    report: true
+    report: flags.debug
 };
 
 // do it
@@ -34,7 +41,7 @@ createPNGs(0);
 // calls itself recursivly
 function createPNGs(position) {
     createPNG(pngSizes[position], function (err, info) {
-        console.log(info);
+        log(info);
         if (err) {
             if (err) throw new Error(err);
         } else if (position < pngSizes.length - 1) {
@@ -53,23 +60,23 @@ function createPNGs(position) {
                 fs.mkdirSync(winDir);
             }
             icongen(PNGoutputDir, macDir, {
-                report: true,
+                report: flags.debug,
                 icns: {
                     name: 'icon',
                     sizes:  [16, 32, 64, 128, 256, 512, 1024]
                 },
             } ).then( ( results ) => {
                 icongen(PNGoutputDir, winDir, {
-                    report: true,
+                    report: flags.debug,
                     ico: {
                         name: 'icon',
                         sizes: [16, 24, 32, 48, 64, 128, 256]
                     },
                 } )
         .then( ( results ) => {
-                // console.log('\n ALL DONE');
+                // log('\n ALL DONE');
             // rename the PNGs to electron format
-            console.log('Renaming PNGs to Electron Format');
+            log('Renaming PNGs to Electron Format');
             renamePNGs(0);
         } )
         .catch( ( err ) => {
@@ -87,14 +94,14 @@ function renamePNGs(position){
     var startName = pngSizes[position] + '.png';
     var endName = pngSizes[position] + 'x' + pngSizes[position] + '.png';
     fs.rename(PNGoutputDir + startName, PNGoutputDir + endName, function (err) {
-        console.log('Renamed '+ startName + ' to '+endName);
+        log('Renamed '+ startName + ' to '+endName);
         if (err) {
             throw err;
         } else if (position < pngSizes.length - 1){
             // not done yet. Run the next one
             renamePNGs(position + 1);
         } else {
-            console.log('\n ALL DONE');
+            console.log('Icons created at ' + output);
         }
     });
 
